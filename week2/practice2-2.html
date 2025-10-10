@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<!-- 
+Practice Assignment 2.2
+    Pseudocode
+        Write introduction to the Interviewer and print to web browser.
+        Ask user for interviewees name and print to web browser.
+        Ask user for interviewees email address and print to web browser.
+        Ask user for interviewees available start date and print to web browser.
+-->    
+
+<html>
+     <head>
+          <title>Practice Assignment 2.2</title>
+     </head>
+     <body style="background-color:lightpink">
+          <h1 style="color:darkmagenta; font-family: Arial, Helvetica, sans-serif;">
+              Interviewee Information Using Nested Functions
+          </h1>
+          <p> 
+              <script>
+                document.write("Interviewee Information Page");
+                document.write("<br />Candidate name: "); // <br /> is read by HTML but not Javascript because it is inside a string
+                document.write(prompt("Thank you for your interest in our company!\nPlease input your name:","")); // prints user input name to screen
+                document.write("<br />Candidate email address: ");
+                document.write(prompt("Please input your email address:","")); // prints user input email to screen
+                document.write("<br />Candidate available start date: ");
+                document.write(prompt("When are you available to start working?","")); // prints user input start date to screen
+                alert("Thank you for your answers! We'll process your information shortly.");
+              </script>
+              <br>
+              <br>
+              <!-- reloads page, leading to reprompting (just wanted to test it out) -->
+              <button onclick="location.reload()">Click here to correct or input new information.</button>
+          </p>
+     </body>
+</html>
