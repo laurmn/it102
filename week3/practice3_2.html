@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- 
+    Pseudocode Plan:
+
+    Ask the user to enter a square size between 3 and 30.
+    Continuously prompt the user to enter a number within the specified range if they input a number outside of the acceptable range.
+    Don't worry about non-numeric input, assume the user will type a number.
+    Using prompt() to get user input.
+    Draw a square of the specified size.  For example, if a size of 5 is requested, you'd draw this:
+        *****
+        *****
+        *****
+        *****
+        *****
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASCII Art Square</title>
+</head>
+<body>
+    <script>
+        // ask user for number input
+        squareSize = Number(prompt("How big would you like your ASCII art to be?\nPlease enter a number between 3 and 30.", ""));
+        
+        // if number input is not between 3 and 30, continuously prompt for new number within accepted range
+        while(squareSize < 3 || squareSize > 30){
+            squareSize = Number(prompt("The number you entered was not between 3 and 30!\nPlease input a proper value:", ""));
+        };
+        
+        for(rows = 0; rows < squareSize; rows++){
+            document.write("<br>");
+            for(columns = 0; columns < squareSize; columns++){
+                document.write("*");
+            };
+        };
+              
+        alert("You input " + squareSize + "! Close this popup to see your " + squareSize + " x " + squareSize + " square.");
+
+    </script>
+</body>
+</html>

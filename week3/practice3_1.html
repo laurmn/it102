@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+
+<!-- 
+Pseudocode:
+    Create a HTML login form
+        create a text box where users can enter their first name. 
+        create a text box where users can enter their last name.
+        create a text box where users can enter their email address. 
+        create a text box where users can enter their password.
+        create a submit button
+    Display (innerHTML) user first and last name to web browser.
+    Display (innerHTML) user email to web browser.
+    Display (innerHTML) user password to web browser.
+-->
+
+<html> 
+    <head> 
+        <script>
+            function reveal(){ // runs below when called (in this case when button is clicked)
+                // assigning variables elements from form
+                let firstName = document.customerInput.elements[0].value;
+                let lastName = document.customerInput.elements[1].value;
+                let email = document.customerInput.elements[2].value;
+                let password = document.customerInput.elements[3].value;
+
+                // printing information to page
+                document.write("Full name: " + firstName + " " + lastName);
+                document.write("<br>Email: " + email);
+                document.write("<br>Password: " + password);
+            }
+        </script>
+    </head>
+    
+    <body>
+        <form name = "customerInput"> 
+        <!-- getting user input for the following four fields using HTML form -->
+            First name: <input type = "text" id = "firstName">
+            <br>
+            Last name: <input type = "text" id = "lastName">
+            <br>
+            Email address: <input type = "text" id = "email">
+            <br>
+            Password: <input type = "password" id = "password">
+            <br> <br>
+            <input type = "button" value = "Submit Information" onClick = "reveal()"> 
+            <!-- if no parameters are required (empty parenthesis in function) then it can be left blank -->
+        </form>
+        <h3> User Input </h3>
+    </body>
+</html>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+     <head>
+          <title>loops</title>
+     </head>
+     <body>
+        <script>       
+        
+        // for loop
+        
+            // var for initializing start value can be declared outside of loop
+            // for(initialize starting value; set max value; set increment){
+            // content that we want to loop
+            // }; reassignes value to count for every loop
+
+            for(count = 1; count <= 10; count ++){ // count is the variable (can be anything)
+                document.write("We have counted to " + count + " from 0 by twos! <br>")
+            };
+
+            count = 7;
+            for( ; count > 2; count --){
+
+            };
+
+        // nested loops, similar to how clocks work
+
+            for(outer = 1 ; outer <= 24 ; outer ++) { // outer loop increases in value only after the inner loop is done, then inner loop starts again
+                for(inner = 1 <= 60; inner ; inner ++){
+                    document.write("Outer is: " + outer + ".<br> Inner is: " + inner + ". <br>");
+                };
+            };
+
+
+        </script>
+     </body>
+</html>

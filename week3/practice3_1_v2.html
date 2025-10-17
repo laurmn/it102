@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+
+<!-- 
+Pseudocode outline:
+    Create a HTML login form
+        create a text box where users can enter their first name. 
+        create a text box where users can enter their last name.
+        create a text box where users can enter their email address. 
+        create a text box where users can enter their password.
+        create a submit button
+    Display (innerHTML) user first and last name to web browser.
+    Display (innerHTML) user email to web browser.
+    Display (innerHTML) user password to web browser.
+-->
+
+<html> 
+    <head> 
+        <title>3.1 Login Form</title>
+
+        <script>
+            function reveal(){ // declaring function, runs content within {} when called (in this case that is when the button is clicked)
+                
+                // assigning elements from form to variables 
+                let firstName = document.customerInput.elements["firstName"].value;
+                let lastName = document.customerInput.elements["lastName"].value;
+                let email = document.customerInput.elements["email"].value;
+                let password = document.customerInput.elements["password"].value;
+
+                // setting innerHTML content
+                document.getElementById("outputName").innerHTML = 
+                  ("Full name: " + firstName + " " + lastName);
+                document.getElementById("outputEmail").innerHTML = 
+                  ("Email: " + email);
+                document.getElementById("outputPassword").innerHTML = 
+                  ("Password: " + password);
+            }
+        </script>
+    </head>
+    
+    <body>
+        <h1>Login Form</h1>
+
+        <hr />
+
+        <form name = "customerInput"> 
+        <!-- getting user input for the following four fields using HTML form -->
+            First name: <input type = "text" id = "firstName">
+            <br>
+            Last name: <input type = "text" id = "lastName">
+            <br>
+            Email address: <input type = "text" id = "email">
+            <br>
+            Password: <input type = "password" id = "password">
+            <br> <br>
+            <input type = "button" value = "Submit Information" onClick = "reveal()"> 
+            <!-- if no parameters are required (empty parenthesis in function) then it can be left blank -->
+        </form>
+        <h3> User Input </h3>
+        
+        <!-- returning innerHTML content declared above, displaying on browser screen as paragraphs -->
+        <p id = "outputName"></p>
+        <p id = "outputEmail"></p>
+        <p id = "outputPassword"></p>
+    </body>
+</html>
