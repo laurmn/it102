@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Web Application Week 3 - Payroll</title>
+
+    <script>
+        
+        function calculateGrossPay(hoursWorked){ // calculating total pay + overtime increase
+            if(hoursWorked <= 40){ // if they work less than 40 hours, no overtime pay
+                let grossPay = hoursWorked * 19;
+                return grossPay;
+            }else{ // if they work more than 40 hours, seperate and calculate overtime pay + regular pay, sum
+                let regularHours = 40;
+                let overtimeHours = hoursWorked - regularHours; 
+                let regularPay = regularHours * 19;
+                let overtimePay = overtimeHours * 19 * 1.5;
+                let grossPay = regularPay + overtimePay;
+                return grossPay;
+            }
+        }
+
+        function calculateSocialSecurity(grossPay){ // calculating SS from total pay
+            let socialSecurityRate = 0.062;
+            let socialSecurity = grossPay * socialSecurityRate; 
+            return socialSecurity;
+        }
+
+        function calculateMedicare(grossPay){ // calculatimg medicare cost from total pay
+            let medicareRate = 0.0145;
+            let medicare = medicareRate * grossPay;
+            return medicare;
+        }
+
+        function calculateWithholding(grossPay, allowances){ // calculating withholding from allowances
+            let withholdingAllowanceAmount = 77.90;
+            let withholdingBase = allowances * withholdingAllowanceAmount; 
+            let taxableIncome = grossPay - withholdingBase;
+            let withholdingRate = 0.20;
+            let withholding = taxableIncome * withholdingRate;
+            return withholding;
+        }
+
+        function calculateNetPay(grossPay, socialSecurity, medicare, withholding){ // calculating net pay after SS, medical, and withholding
+            let netPay = grossPay - socialSecurity - medicare - withholding;
+            return netPay;
+        }
+
+        function generatePayStub(employeeName, hoursWorked, allowances){ // calling other functions to calculate various
+            let grossPay = calculateGrossPay(hoursWorked);
+            let socialSecurity = calculateSocialSecurity(grossPay);
+            let medicare = calculateMedicare(grossPay);
+            let withholding = calculateWithholding(grossPay, allowances);
+            let netPay = calculateNetPay(grossPay, socialSecurity, medicare, withholding);
+            document.getElementById("payrollStub").innerHTML = // assigning payroll output to Id
+                  ("Employee Name: " + employeeName + 
+                  "<br>Hours Worked: " + hoursWorked + 
+                  "<br>Gross Pay: $" + grossPay.toFixed(2) + 
+                  "<br>Social Security: $" + socialSecurity.toFixed(2) + 
+                  "<br>Medicare: $" + medicare.toFixed(2) + 
+                  "<br>Withholding: $" + withholding.toFixed(2) + 
+                  "<br>Net Pay: $" + netPay.toFixed(2) + "<br>");
+        }
+    
+
+          function doPayroll(){ // turning user form input into variables, calling pay stub function
+                    let hoursWorked = document.employeeForm.elements["hoursWorked"].value;
+                    let allowances = document.employeeForm.elements["allowances"].value;
+                    let firstName = document.employeeForm.elements["firstName"].value;
+                    let lastName = document.employeeForm.elements["lastName"].value;
+                    let employeeName = firstName + " " + lastName;
+                    generatePayStub(employeeName, hoursWorked, allowances); // calling pay stub function
+          }
+
+    </script>
+</head>
+
+<body>
+        <h1>Payroll</h1>
+        <hr />
+        
+        <form name="employeeForm"> 
+        <!-- getting user input through form -->
+            First Name: <input type="text" id = "firstName"><br />  
+            Last Name: <input type="text" id = "lastName"><br />
+            Enter Hours Worked: <input type="number" id = "hoursWorked"><br />
+            Enter number of withholding allowances: <input type="number" id = "allowances"><br />
+                <input type="button" value="Submit" onclick="doPayroll()">
+        </form>
+
+        <hr />
+        <h3>Payroll Stub</h3>
+
+        <!-- calling payroll output -->
+        <p id = payrollStub></p> 
+
+    </body>
+</html>
