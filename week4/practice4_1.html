@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Grocery List</title>
+  </head>
+  <body>
+    <h2>Grocery List</h2>
+    Enter grocery items separated by commas.
+    <br>
+    <textarea id="groceryInput" placeholder='Enter grocery items and sperate with comma ","when finished.'></textarea>
+    <br>
+    <button onclick="createGroceryList()">Create Grocery List</button>
+    <p id="groceryList"></p>
+    <p>Total items: <span id="totalItems"></span></p>
+
+  <script>
+    function createGroceryList() {
+        
+        let userInput = document.getElementById("groceryInput").value;
+        
+    //Check for empty input from user NOT WORKING  
+        if(userInput == ""){
+            alert("Invalid input! \nPlease list at least one item to generate grocery list.")
+        }else{
+        
+            // Split input string into array
+            let groceryItems = userInput.split(",");
+            console.log(groceryItems);
+        
+            // Trim white space from each items by looping through array
+            let numberOfItems = groceryItems.length;           
+            for(i = 0; i < numberOfItems; i++) {
+                groceryItems[i] = groceryItems[i].trim();
+                // groceryItems[i] = groceryItems[i].replace(",", ""); // replaces commas with nothing in string
+            }
+            console.log(groceryItems);
+
+            // Sort groceryItems alphabetically
+            groceryItems.sort();
+            alert(groceryItems);
+        
+            // Display grocery list to webpage
+            let groceries = []; 
+            for(i = 0; i < numberOfItems; i++){
+                groceries.push("<li>" + groceryItems[i] + "</li>");
+                console.log(groceries);
+            }
+
+            document.getElementById("groceryList").innerHTML = ("<ol>" + groceries + "</ol"); // commas are still showing up!!
+            document.getElementById("totalItems").innerHTML = (numberOfItems);
+        };
+    }
+  </script>
+  </body>
+</html>
