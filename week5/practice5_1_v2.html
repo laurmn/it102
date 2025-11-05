@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        function Card(suit, rank){ // card constructor
+            this.suit = suit; // assigns suit from parameter
+            this.rank = rank; // assigns rank from parameter
+            this.isVisible = false; // assigns boolean false
+            this.show = function (){
+                this.isVisible = true; // assigns isVisible boolean true
+            };
+            this.hide = function (){
+                this.isVisible = false; // assigns isVisible boolean false
+            };
+            this.visibility = function(){ // returns output strings based on visibility boolean
+                if(this.isVisible = true){
+                    return(" ");
+                }else if(this.isVisible = false){
+                    return(" not ");
+                };
+            }
+            };
+
+        let card1 = new Card("spades", "ace"); // creates new card using card object templet with suit of spades and rank of ace
+        let card2 = new Card("diamonds", "queen"); // creates new card using card object templet with suit of diamonds and rank of queen
+
+        card1.show();
+
+        document.getElementById("card01").innerHTML = ("The first card is the " + card1.rank + " of " + card1.suit + ". This card is" + card1.visibility() + "visible.");
+    </script>
+
+</head>
+<body>
+    <p id = "card01"></p>
+    <p id = "card2"></p>
+</body>
+</html>
