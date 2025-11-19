@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Math Requirements Checker</title>
+</head>
+<body>
+
+<h1>Math Requirements Checker</h1>
+<p>Enter your most recent or highest math course to check if you meet the BAS math requirement.</p>
+
+<form id="mathForm" onsubmit="main(); return false;">
+  <label for="courseInput">Math Course:</label>
+  <input type="text" id="courseInput" name="courseInput" placeholder="e.g., MATH146">
+  <button type="submit">Check Eligibility</button>
+</form>
+
+<div id="result"></div>
+
+<script>
+    
+    var allMathCourses = {
+        MATH080: { name: "Preparatory Math", qualifies: false, next: "MATH098" },
+        MATH081: { name: "Basic Math", qualifies: false, next: "MATH084" },
+        MATH084: { name: "Algebra I", qualifies: false, next: "MATH085" },
+        MATH085: { name: "Algebra II", qualifies: false, next: "MATH097" },
+        MATH097: { name: "Elementary Algebra", qualifies: false, next: "MATH098" },
+        MATH098: { name: "Intermediate Algebra", qualifies: false, next: "MATH141" },
+        MATH099: { name: "Essentials of Intermediate Algebra", qualifies: false, next: "MATH141" },
+        MATH107: { name: "Math in Society", qualifies: false, next: "MATH146" },
+        MATH116: { name: "Applications of Math", qualifies: false, next: "MATH141" },
+        MATH141: { name: "Precalculus I", qualifies: false, next: "MATH142" },
+        MATH142: { name: "Precalculus II", qualifies: false, next: "MATH151" },
+        MATH146: { name: "Elementary Statistics", qualifies: true, next: "MATH141" },
+        MATH148: { name: "Business Calculus", qualifies: false, next: "MATH211" },
+        MATH151: { name: "Calculus I", qualifies: true, next: "MATH152" },
+        MATH152: { name: "Calculus II", qualifies: true, next: "MATH163" },
+        MATH163: { name: "Calculus III", qualifies: true, next: "MATH220" },
+        MATH211: { name: "Elements of Statistical Methods", qualifies: true, next: "" },
+        MATH220: { name: "Linear Algebra", qualifies: true, next: "MATH224" },
+        MATH224: { name: "Vector Calculus", qualifies: true, next: "MATH238" },
+        MATH238: { name: "Differential Equations", qualifies: true, next: "" }
+    };
+
+    function main() {
+        let courseNumber = getCourseNumber(); // cleans user input into code that matches with list of all math courses (allMathCourses)
+        if(courseNumber == false){ // would be false when user input is empty or invalid based on getCourseNumber()
+            alert("Please enter a valid course number!") // prints to reenter a valid code
+        } else {
+            let userCourse = checkEligibility(courseNumber); // calls checkEligibility() and stores course object
+            displayResults(userCourse); // sends course object to displayResults() and prints results/next steps to document 
+        }
+    }
+
+    function getCourseNumber() {
+        let userInput = document.getElementById("courseInput").value; // gets user input
+        if(userInput == null){ // if submission was empty
+            return(false);
+        } else {
+            let courseNumber = userInput.trim().replaceAll(" ", "").toUpperCase(); //removes spaces and capitalizes all letters
+            if (courseNumber in allMathCourses){ // checks if course code exists in list of all math courses (allMathCourses)
+                return(courseNumber);
+            } else { // if code did not exist
+                return(false);
+            }
+        }
+    }
+
+    function checkEligibility(courseNumber) {
+        if(allMathCourses[courseNumber].qualifies == true){ // if the specified course has met the requirement (based on allMathCourses)
+            let userCourse = {
+                courseName: allMathCourses[courseNumber].name, // course name from allMathCourses
+                courseNumber: courseNumber, 
+                meetsRequirement: true, // has met requirement based on if statement
+                nextMathCourse: allMathCourses[courseNumber].next // next course code from allMathCourses
+            }
+            return(userCourse);
+        } else { //if the specified course has not met the requirement (based on allMathCourses)
+            let userCourse = {
+                courseName: allMathCourses[courseNumber].name, // course name from allMathCourses
+                courseNumber: courseNumber,
+                meetsRequirement: false, // has met not requirement based on if statement
+                nextMathCourse: allMathCourses[courseNumber].next // next course code from allMathCourses
+            }
+            return(userCourse); // returns specified course object containing properties listed above
+        }
+    }
+    
+    function displayResults(userCourse) {
+        let resultDiv = document.getElementById("result"); // creates variable to access result location on document
+        if(userCourse.meetsRequirement == true){ // if specified course meets requirement, prints congratulatory message
+            resultDiv.innerHTML = (`Congratulations! You have met the math requirement for BAS in Application Development.`)
+        } else {
+            if(userCourse.nextMathCourse == ""){ // if specified course doesn't meet requirement and doesn't have a next course listed, prints to consult with advisor
+                resultDiv.innerHTML = (`You do not yet meet the BAS math requirement. You should next consult with an advisor to see which course you should continue with.`)
+            } else { // if specified course doesn't meet requirement and next course is provided, prints to continue on to next course
+                resultDiv.innerHTML = (`You do not yet meet the BAS math requirement. You should next consider taking ${userCourse.nextMathCourse} (${allMathCourses[userCourse.nextMathCourse].name}).`)
+            }
+        }
+    }
+
+</script>
+
+</body>
+</html>
