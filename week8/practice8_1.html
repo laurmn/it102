@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        function Card(suit, rank){ // card constructor
+            this.suit = suit; // assigns suit from parameter
+            this.rank = rank; // assigns rank from parameter
+            this.isVisible = false; // assigns boolean false
+            this.show = function (){
+                this.isVisible = true; // assigns isVisible boolean true
+            };
+            this.hide = function (){
+                this.isVisible = false; // assigns isVisible boolean false
+            };
+            } 
+
+        let deck = [];
+        let suits = ["hearts", "clubs", "diamonds", "spades"];
+
+            for (i = 0; i < 4; i++){
+                for (n = 0; n < 13; n++){
+                    let x = n;
+                        if (x == 0) {x = "ace"};
+                        if (x == 10) {x = "jack"};
+                        if (x == 11) {x = "queen"};
+                        if (x == 12) {x = "king"};
+                    let card = new Card(
+                        this.suit = suits[i],
+                        this.rank = x,
+                    );
+                    deck.push(card);
+                }                
+            }
+        
+        let tempDeck = deck;
+        let shuffledDeck = [];
+        let handCount = 0;
+
+        function shuffle(){
+            for(i = 0; i < 52; i++){
+                var picked = Math.floor(Math.random()*tempDeck.length);
+                shuffledDeck.push(tempDeck[picked]);
+                tempDeck.splice(picked,1);
+            };
+        }
+
+        function showCards(){
+            let showDeck = '';
+            for (let i = 0; i < deck.length; i++) {
+                showDeck += `${deck[i].rank} of ${deck[i].suit}, `;
+            }            
+            document.getElementById("unshuffled").innerHTML = (showDeck);
+            shuffle();
+            let showShuffled = '';
+            for (let i = 0; i < shuffledDeck.length; i++) {
+                showShuffled += `${shuffledDeck[i].rank} of ${shuffledDeck[i].suit}, `;
+            }            
+            document.getElementById("shuffled").innerHTML = (showShuffled);
+        }
+
+            
+    </script>
+
+</head>
+<body>
+
+        <button type="submit" onclick = "showCards()">check</button><br>
+
+    <p id = "unshuffled"></p>
+    <p id = "shuffled"></p>
+</body>
+</html>
