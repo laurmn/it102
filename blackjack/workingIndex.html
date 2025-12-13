@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Working Blackjack Game</title>
+<link rel="stylesheet" href="styles/style.css">
+
+<script>
+
+let deck = [];
+const suits = ["hearts", "clubs", "diamonds", "spades"];
+const ranks = ["ace", 2, 3, 4, 5, 6, 7, 8, 9, "jack", "queen", "king"];
+const values = [x, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10];
+
+function Card(suit, rank, value){ // card constructor
+    this.suit = suit; // assigns suit from parameter
+    this.rank = rank; // assigns rank from parameter
+    this.value = value; // assigns numeric value from parameter
+    this.isVisible = false; // assigns boolean false
+    this.show = function (){ 
+        this.isVisible = true; // assigns isVisible boolean true
+    };
+    this.hide = function (){
+        this.isVisible = false; // assigns isVisible boolean false
+    };
+    this.display = function(){
+        if (this.isVisible) {return '<img src="' + this.image + '" height="87" width="100">'; // weird having if-else
+        } else {return '<img src="images/back.png" height="87" width="60">';}
+    }
+    this.isDealt = false;
+    this.image = this.constructCardImage();
+    this.constructCardImage = function(){
+        rankStr = this.rank.toString();
+        return "images/" + rankStr + "_of_" + this.suit + ".svg";
+    }
+};
+
+function validateUserName(username){
+    return new Promise(function(resolve,reject){
+        if(!username.trim()){
+            reject("Please input a username to begin!");
+            return;
+        }
+        var regex = /^[a-zA-Z]{1,799}$/;
+        if(!regex.test(username)){ // contains non alpha numeric characters
+            reject("Invalid username! Please do not use spaces, numbers, or special characters")
+            return;
+        }
+        resolve(username);
+    })
+};
+
+function createDeck(){
+    for (let i = 0; i < 4; i++){
+        for (let n = 0; n < 13; n++){
+            deck.push(new Card(suits[i], ranks[n], values[n])); // creates new card values using previously declared arrays
+        }                
+    }
+};
+
+function shuffleDeck(){
+    let tempDeck = deck;
+    let shuffledDeck = [];
+    for(let i = 52; i > 0; i--){
+        let picked = Math.floor(Math.random()*(tempDeck.length-1));
+        shuffledDeck.push(tempDeck[picked]);
+        tempDeck.splice(picked,1);
+    };
+    
+    for (let n = 0; n < deck.length; n++){
+    shuffledDeck[n].isVisible = true;
+    shuffledDeck[n].dealt = false
+    }
+
+    dealInitialCards(); // deal cards after shuffle
+    alert("Deck shuffled and new cards dealt!");
+    
+    return shuffledDeck;
+};
+
+
+
+function dealInitialCards(){
+    let dealerCard1 = shuffledDeck[1];
+    let dealerCard2 = shuffledDeck[3];
+    let hand = [];
+    hand.push(shuffledDeck[0, 2]);
+};
+
+function stand(){
+    dealerCard2.show.display
+
+    dealerTotal = dealerCard1.value + dealerCard2.value;
+    let userTotal;
+    for (let i = 0; i < hand.length; i++){
+
+    }
+};
+
+
+// Start game
+async function startGame() {
+    var username = document.userForm.elements[0].value.trim();
+    try {
+        var validUsername = await validateUserName(username);
+        document.getElementById('userForm').style.display = 'none';
+        document.getElementById('gameArea').style.display = 'block';
+        document.getElementById('welcomeMessage').textContent = `Welcome ${validUsername}!`;
+
+        createDeck();
+        shuffleDeck();       // shuffle
+        dealInitialCards();  // deal initial cards
+    } catch (error) {
+        alert(error);
+    }
+}
+
+
+
+
+
+</script>
+</head>
+<body>
+<div class="game-container">
+    <h1>Blackjack Game</h1>
+    <form name="userForm" id="userForm" style="display: block;">
+        Enter your name: <input type="text"> 
+        <input type="button" value="Start Game" onclick="startGame()">
+    </form>
+</div>
+
+<div id="gameArea" style="display: none;">
+    <h2 id="welcomeMessage"></h2>
+
+    <div>
+        <h3>Dealer's Cards:</h3>
+        <div id="dealerCards" class="cards"></div>
+    </div>
+
+    <div>
+        <h3>Your Cards:</h3>
+        <div id="playerCards" class="cards"></div>
+    </div>
+
+    <div id="buttons">
+        <button id="hitButton" onclick="hit()">Hit</button>
+        <button id="standButton" onclick="stand()">Stand</button>
+        <button id="shuffleButton" onclick="shuffleDeck()">Shuffle Deck</button>
+    </div>
+
+    <h3 id="resultMessage"></h3>
+
+    <button onclick="returnToForm()">Return to Form</button>
+</div>
+</body>
+</html>
