@@ -1,0 +1,89 @@
+quarter project pseudocode: to-do list with filter
+
+<script>
+
+FUNCTION theme()
+    if theme is default
+        change to dark theme (css)
+    else
+        change to default theme (css)
+
+ARRAY (initialize) taskList[]
+
+CONSTRUCTOR taskItem()
+    task: (user input, string)
+    notes: (user input, string)
+    importance: (user input, string)
+    completion: false (boolean)
+    importanceVisibility: true (boolean)
+
+FUNCTION checkInput() with user input as parameters
+    retreives user input
+    if input fields are filled
+        returns true
+    else if empty
+        alerts user of need for input
+        returns false
+
+FUNCTION importanceLevel() with taskList[] as parameters
+    retrieves user selection
+    (loop following through taskList array)
+        if user input is 'all'
+            set task importanceVisibility to true
+        else if user input is 'low'
+            if task importance is 'low' 
+                set importanceVisibility to true
+            else if task importance is 'medium'  
+                set importanceVisibility to false
+            else if task importance is 'high'  
+                set importanceVisibility to false
+        etc 
+    calls showList()
+
+FUNCTION checkedItem()
+    sets competion to true
+    calls showList()
+
+FUNCTION showList() with taskList[] as parameters
+    create visibleList[] array by filtering out elements in taskList[] with completion set to true and importanceVisibility set to false
+    display visibleList[] to webpage using innerHTML (loop through all elements)
+        change color of task based on importance (css)
+        make task bold and notes smaller (css)
+        add checkbox to each list item
+
+
+FUNCTION createTask()
+    gets user values
+    calls checkInput(user values)
+    if checkInput is true
+        creates new taskItem object
+        pushes to taskList[] array
+        clears form
+        calls showList() function
+
+</script>
+
+
+<body>
+
+theme changing toggle
+    calls theme() function
+
+form for user input
+    task input (text field)
+    task notes (text field)
+    importance level (selection, 3 options high-medium-low)
+    submission button (calls createTask() function)
+
+user input selection for displayed importance level (4 options all-high-medium-low) 
+    on change calls importanceLevel() function    
+
+Display list (visibleList) with checkboxes using innerHTML
+    on click of checkbox call checkedItem() function
+
+
+
+
+
+
+
