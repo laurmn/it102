@@ -10,51 +10,37 @@
       var hitMe = true;
       var dealer = 0;
 
-      //1st card
-      hitMe = prompt("Current total: " + total + "Take a card? Y/N");
-      if (hitMe == "Y"){
-        hitMe = true;
-      }else {
-        hitMe = false;
+
+    dealer = Math.ceil(11*Math.random()) + Math.ceil(11*Math.random());
+
+    function play(){
+      do{
+        hitMe = prompt(`Current total: ${total} \nTake a card? Y/N`);
+        if (hitMe == "Y" || hitMe == "y"){
+          hitMe = true;
+          card = Math.ceil(11*Math.random());
+          total += card; // draws new card and adds to total
+        }else {
+          hitMe = false;
+        }
+      } while (hitMe == true); // continue to prompt until user doesn't select yes
+
+      if (total > 21){ // if user has more than 21 points, they bust
+        alert(`Bust! \nYou lose :(`)
+      } else {
+        if ((total - dealer) > 0){ // if user doesn't bust but has more points than the dealer, they win
+          alert(`You win! \nDealer total: ${dealer} \nYour total: ${total} \nDifference: ${total - dealer}`)
+        }
+        else if ((total - dealer) == 0){ // if the user has equal points to the dealer, they tie
+          alert(`You tied! \nDealer total: ${dealer} \nYour total: ${total} \nDifference: ${total - dealer}`)
+        }
+        else if ((total - dealer) < 0){ // if user has fewer points than the dealer, they lose
+          alert(`You lost! \nDealer total: ${dealer} \nYour total: ${total} \nDifference: ${dealer - total}`)
+        }
       }
+    }
 
-      if(hitMe){
-        card = Math.ceil(11*Math.random());
-        total += card;
-      }
-
-      //2nd card
-      hitMe = prompt("Current total: " + total + "Take a card? Y/N");
-      if (hitMe == "Y"){
-        hitMe = true;
-      }else {
-        hitMe = false;
-      }
-
-      if(hitMe){
-        card = Math.ceil(11*Math.random());
-        total += card;
-      }
-
-      //3rd card
-      hitMe = prompt("Current total: " + total + "Take a card? Y/N");
-      if (hitMe == "Y"){
-        hitMe = true;
-      }else {
-        hitMe = false;
-      }
-
-      if(hitMe){
-        card = Math.ceil(11*Math.random());
-        total += card;
-      }
-
-      //final total
-
-      //dealer always takes 2 cards
-      dealer = Math.ceil(11*Math.random()) + Math.ceil(11*Math.random());
-
-      alert("Your hand is worth " + total + ". Dealer got " + dealer + ".");
+	play();
 
     </script>
   </body>
