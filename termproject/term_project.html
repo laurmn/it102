@@ -174,8 +174,9 @@ function createTask(){
     } else {
         taskList.push(new taskItem(task, notes, importance));
         document.getElementById("inputForm").reset();
+        completionFilterChange();
+        importanceFilterChange();
         showList();
-
     }
 }
 
@@ -228,3 +229,4 @@ function createTask(){
 
 </body>
 </html>
+
