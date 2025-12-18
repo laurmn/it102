@@ -1,0 +1,2 @@
+always validate user input 
+use strict
