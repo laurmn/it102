@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+    /* Light and Dark Theme CSS generated with copilot */
+        :root{ --bg: #ffffff; --fg: #111111; --card: #f8f8f8; }
+        .dark-theme{ --bg: #0f1113; --fg: #e8e8e8; --card: #181a1b; }
+        body{ background: var(--bg); color: var(--fg); font-family: Arial, Helvetica, sans-serif; }
+        .task-row{ background: var(--card); padding: 6px 8px; margin: 6px 0; border-radius: 6px; }
+        label{ color: inherit; }
+        #themeToggle{ margin: 8px 0; }
+    </style>
+
+    <script>
+
+// changes theme from light to dark and vice versa, generated using copilot
+function changeTheme(){ 
+    const root = document.documentElement;
+    const isDark = root.classList.toggle('dark-theme');
+    try { localStorage.setItem('theme', isDark ? 'dark' : 'light'); } catch(e){}
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = isDark ? 'Switch to Light' : 'Switch to Dark';
+}
+
+// initializes array to store task item objects
+let taskList = [];
+
+// task item object constructor
+function taskItem(task, notes, importance){
+    // user input properties
+    this.task = task;
+    this.notes = notes;
+    this.importance = importance;
+    this.completed = false;
+    // properties to manage filter visibility
+    this.completionSortVisibility = true;
+    this.importanceSortVisibility = true;
+};
+
+// checks if task input is empty
+function checkInput(task){
+    let input = task;
+    if (input == "") {
+        return false;
+    } else {
+        return true;
+    };
+}
+
+
+// displays the task list on the webpage
+function showList(){
+    const taskContainer = document.getElementById('taskContainer');
+    taskContainer.innerHTML = '';
+    for (let i = 0; i < taskList.length; i++){
+        // filters items displayed based on filter settings
+        if (taskList[i].completionSortVisibility == true && taskList[i].importanceSortVisibility == true){ 
+            let listItem = taskList[i];
+
+        // used copilot to generate list format and check box mechanism
+            const row = document.createElement('div');
+            row.className = 'task-row';
+
+            const cb = document.createElement('input');
+            cb.type = 'checkbox';
+            cb.id = 'task-' + i;
+            cb.checked = !!listItem.completed;
+            cb.dataset.index = i;
+            // when checkbox is changed, updates the task item's completed status and refresh the list display
+            cb.addEventListener('change', (e) => {
+                const idx = Number(e.target.dataset.index);
+                if (!Number.isNaN(idx) && taskList[idx]) {
+                    taskList[idx].completed = e.target.checked;
+                }
+                completionFilterChange();
+            });
+
+            const label = document.createElement('label');
+            label.htmlFor = cb.id;
+            label.style.marginLeft = '8px';
+            label.textContent = listItem.task + (listItem.notes ? ' — ' + listItem.notes : '');
+
+
+            // apply styling based on importance level
+            if (listItem.importance === 'High'){
+                label.style.color = 'crimson';
+            } else if (listItem.importance === 'Medium'){
+                label.style.color = 'darkorange';
+            } else if (listItem.importance === 'Low'){
+                label.style.color = 'green';
+            };
+            // apply styling based on completion status
+            if (listItem.completed){
+                label.style.textDecoration = 'line-through'};
+
+            row.appendChild(cb);
+            row.appendChild(label);
+            taskContainer.appendChild(row);
+        }
+
+    }
+}
+
+// uses user selection to filter tasks by importance level
+function importanceFilterChange(){
+    let importanceFilter = document.getElementById("importanceFilter").value;
+    for(let i = 0; i < taskList.length; i++){
+        // changes visibility property based on item importance and filter selection
+        if(importanceFilter == "All"){
+            taskList[i].importanceSortVisibility = true;
+        } else if (importanceFilter == "Low") {
+            if(taskList[i].importance == "Low"){
+                taskList[i].importanceSortVisibility = true;
+            }
+            else {
+                taskList[i].importanceSortVisibility = false;
+            } 
+        } else if (importanceFilter == "Medium") {
+            if(taskList[i].importance == "Medium"){
+                taskList[i].importanceSortVisibility = true;
+            }
+            else {
+                taskList[i].importanceSortVisibility = false;
+            }
+        } else if (importanceFilter == "High") {
+            if(taskList[i].importance == "High"){
+                taskList[i].importanceSortVisibility = true;
+            }
+            else {
+                taskList[i].importanceSortVisibility = false;
+            }
+        }
+    }
+    showList();
+}
+
+// uses user selection to filter tasks by completion status
+function completionFilterChange(){
+    let completionFilter = document.getElementById("completionFilter").value;
+    for(let i = 0; i < taskList.length; i++){
+        // changes visibility property based on item completion and filter selection
+        if(completionFilter == "All"){
+            taskList[i].completionSortVisibility = true;
+        } else if (completionFilter == "Incomplete") {
+            if(taskList[i].completed == false){
+                taskList[i].completionSortVisibility = true;
+            }
+            else {
+                taskList[i].completionSortVisibility = false;
+            } 
+        } else if (completionFilter == "Complete") {
+            if(taskList[i].completed == true){
+                taskList[i].completionSortVisibility = true;
+            }
+            else {
+                taskList[i].completionSortVisibility = false;
+            }
+        }
+    }
+    showList();
+}
+
+// creates new task from user input and adds it to the task list
+function createTask(){
+    let task = document.getElementById("task").value;
+    let notes = document.getElementById("notes").value;
+    let importance = document.getElementById("importance").value;
+    if (checkInput(task) == false){
+        alert(`Please input a task to create to-do list item!`);
+    } else {
+        taskList.push(new taskItem(task, notes, importance));
+        document.getElementById("inputForm").reset();
+        showList();
+
+    }
+}
+
+    </script>
+
+    
+
+
+
+</head>
+<body>
+    <button id="themeToggle" type="button" onclick="changeTheme()">Switch to Dark</button>
+    
+    <!-- user input form for the task, task notes, and task importance-->
+    <form id = "inputForm">
+        <label for="task">Task:</label>
+        <input type="text" id="task" name="task"><br>
+        <label for="notes">Notes:</label>
+        <input type="text" id="notes" name="notes"><br>
+        <label for="importance">Importance:</label>
+        <select id="importance" name="importance">
+            <option value="Low">Low</option>
+            <option value="Medium">Medium</option>
+            <option value="High">High</option>
+        </select><br>
+        <!--submitting the task will add a new task and refresh the list display-->
+        <input type="button" value="Add Task" onclick="createTask()">
+    </form><br>
+
+    <!-- user input is used to filter for importance and completion status-->
+    <form id = "filterForm">
+    <label for="importanceFilter">Importance Filter:</label>
+    <select id="importanceFilter" onchange="importanceFilterChange()">
+        <option value="All">All</option>
+        <option value="Low">Low</option>
+        <option value="Medium">Medium</option>
+        <option value="High">High</option>
+    </select>
+    <label for ="completionFilter">Completion Filter:</label> 
+    <select id="completionFilter" onchange="completionFilterChange()">
+        <option value="All">All</option>
+        <option value="Incomplete">Incomplete</option>
+        <option value="Complete">Complete</option>
+    </select>
+    </form>
+    <br>
+
+    <!-- Visible task list is displayed here -->
+    <div id="taskContainer">
+
+</body>
+</html>
