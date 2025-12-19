@@ -3,40 +3,43 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Working Blackjack Game</title>
+<title>Nguyen's Blackjack Game</title>
 <link rel="stylesheet" href="styles/style.css">
 
 <script>
 
 let deck = [];
+let shuffledDeck = []
+let hand = [];
+let dealerCards = [];
 const suits = ["hearts", "clubs", "diamonds", "spades"];
-const ranks = ["ace", 2, 3, 4, 5, 6, 7, 8, 9, "jack", "queen", "king"];
-const values = [x, 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10];
+const ranks = ["ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, "jack", "queen", "king"];
+const values = ["ace", 2, 3, 4, 5, 6, 7, 8, 9, 10, 10, 10, 10];
 
 function Card(suit, rank, value){ // card constructor
-    this.suit = suit; // assigns suit from parameter
-    this.rank = rank; // assigns rank from parameter
-    this.value = value; // assigns numeric value from parameter
-    this.isVisible = false; // assigns boolean false
+    this.suit = suit; 
+    this.rank = rank; 
+    this.value = value; 
+    this.isVisible = false; 
+    this.isDealt = false;
+    this.image = `images/${this.rank}_of_${this.suit}.svg`;
     this.show = function (){ 
-        this.isVisible = true; // assigns isVisible boolean true
+        this.isVisible = true;
     };
     this.hide = function (){
-        this.isVisible = false; // assigns isVisible boolean false
+        this.isVisible = false;
     };
     this.display = function(){
-        if (this.isVisible) {return '<img src="' + this.image + '" height="87" width="100">'; // weird having if-else
-        } else {return '<img src="images/back.png" height="87" width="60">';}
-    }
-    this.isDealt = false;
-    this.image = this.constructCardImage();
-    this.constructCardImage = function(){
-        rankStr = this.rank.toString();
-        return "images/" + rankStr + "_of_" + this.suit + ".svg";
-    }
+        if (this.isVisible) {
+            return `<img src="${this.image}" height="87" width="100">`;
+        } else {
+            return '<img src="images/back.png" height="87" width="60">';
+        }
+    };
+    
 };
 
-function validateUserName(username){
+function validateUserName(username){ // validates user input
     return new Promise(function(resolve,reject){
         if(!username.trim()){
             reject("Please input a username to begin!");
@@ -51,53 +54,136 @@ function validateUserName(username){
     })
 };
 
-function createDeck(){
+function createDeck(){ // creates new card objects using previously declared arrays and adds them to deck
     for (let i = 0; i < 4; i++){
         for (let n = 0; n < 13; n++){
-            deck.push(new Card(suits[i], ranks[n], values[n])); // creates new card values using previously declared arrays
+            deck.push(new Card(suits[i], ranks[n], values[n]));
         }                
     }
+    shuffleDeck(); // calls function to shuffle order
 };
 
-function shuffleDeck(){
+function shuffleDeck(){ // reorders deck array objects into new array
     let tempDeck = deck;
-    let shuffledDeck = [];
+    shuffledDeck = [];
     for(let i = 52; i > 0; i--){
-        let picked = Math.floor(Math.random()*(tempDeck.length-1));
+        let picked = Math.floor(Math.random()*(tempDeck.length));
         shuffledDeck.push(tempDeck[picked]);
         tempDeck.splice(picked,1);
     };
-    
-    for (let n = 0; n < deck.length; n++){
-    shuffledDeck[n].isVisible = true;
-    shuffledDeck[n].dealt = false
-    }
-
     dealInitialCards(); // deal cards after shuffle
-    alert("Deck shuffled and new cards dealt!");
-    
-    return shuffledDeck;
+    console.log("Deck shuffled and new cards dealt");
 };
-
-
 
 function dealInitialCards(){
-    let dealerCard1 = shuffledDeck[1];
-    let dealerCard2 = shuffledDeck[3];
-    let hand = [];
-    hand.push(shuffledDeck[0, 2]);
+    dealerCards.push(shuffledDeck[1]); // gives dealer second card face up
+    shuffledDeck[1].isDealt = true;
+    dealerCards[0].show();
+
+    dealerCards.push(shuffledDeck[3]); // gives dealer fourth card face down
+    shuffledDeck[3].isDealt = true;
+    dealerCards[1].hide();
+
+    hand.push(shuffledDeck[0]); // gives player first card face up
+    shuffledDeck[0].isDealt = true;
+    shuffledDeck[0].show();
+
+    hand.push(shuffledDeck[2]); // gives player third card face up
+    shuffledDeck[2].isDealt = true;
+    shuffledDeck[2].show();
+
+    showCards(); // calls document display function
 };
 
-function stand(){
-    dealerCard2.show.display
+// displays dealer and player cards into the document
+function showCards(){
+    const dealerCardDisplay = document.getElementById('dealerCards');
+    const playerCardDisplay = document.getElementById('playerCards');
+    // Update the inner HTML of the containers using image sources (copilot generated)
+    if(dealerCardDisplay){
+        dealerCardDisplay.innerHTML = dealerCards.map(c => c.display()).join(' ');
+    }
+    if(playerCardDisplay){
+        playerCardDisplay.innerHTML = hand.map(c => c.display()).join(' ');
+    }
+}
 
-    dealerTotal = dealerCard1.value + dealerCard2.value;
-    let userTotal;
-    for (let i = 0; i < hand.length; i++){
 
+function hit(){ // takes undealt card from deck and adds to user's hand
+    let drawnCard;
+    do{
+        drawnCard = Math.floor(Math.random()*(shuffledDeck.length));
+    } while (shuffledDeck[drawnCard].isDealt == true) // rerandomizes card until it is an undealt one
+    hand.push(shuffledDeck[drawnCard]);
+    console.log(`drew the ${hand[hand.length - 1].rank} of ${hand[hand.length - 1].suit}`);
+    shuffledDeck[drawnCard].isDealt = true;
+    hand[hand.length - 1].show();
+    showCards(); // updates display
+}
+    
+
+function stand(){    
+    dealerCards[1].show(); // flips dealer's hidden card
+    showCards(); 
+
+    dealerTotal = 0;
+    if (dealerCards[0].value == "ace" && dealerCards[1].value == "ace"){ // if both dealer cards are aces, sets values to 11 and 1
+        dealerTotal = 11+1
+    } else if (dealerCards[0].value == "ace" || dealerCards[1].value == "ace"){ // if one card is an ace, sets value to 11
+        if (dealerCards[0].value == "ace"){
+            dealerTotal = dealerCards[1].value + 11;
+        }
+        else{
+            dealerTotal = dealerCards[0].value + 11;
+        }
+    } else {
+        dealerTotal = dealerCards[1].value + dealerCards[0].value;
+    }
+            
+    userTotal = 0;
+    let userAces = 0;
+    for (let i = 0; i < hand.length; i++){ // adds total excluding aces
+        if (hand[i].value == "ace"){
+            userAces ++;
+        } else {
+            userTotal += hand[i].value;
+        }
+    }
+    if (userAces > 0){
+        userTotal += (11 * userAces); // adds ace values as 11s
+        if (userTotal > 21){
+            do{
+                userTotal -= 10; // changes ace values to 1s if total is over 21
+                userAces --;
+            } while (userTotal > 21 && userAces > 0); // changes values until all aces changed/total goes below 21             
+        };
+    };
+
+
+    if (userTotal > 21){ // if user has more than 21 points, they bust
+        alert(`Bust! \nYou lose :( \nYour total: ${userTotal}`)
+    } else {
+        if ((userTotal - dealerTotal) > 0){ // if user doesn't bust but has more points than the dealer, they win
+            alert(`You win! \nDealer total: ${dealerTotal} \nYour total: ${userTotal} \nDifference: ${userTotal - dealerTotal}`)
+        }
+        else if ((userTotal - dealerTotal) == 0){ // if the user has equal points to the dealer, they tie
+            alert(`You tied! \nDealer total: ${dealerTotal} \nYour total: ${userTotal} \nDifference: ${userTotal - dealerTotal}`)
+        }
+        else if ((userTotal - dealerTotal) < 0){ // if user has fewer points than the dealer, they lose
+            alert(`You lost! \nDealer total: ${dealerTotal} \nYour total: ${userTotal} \nDifference: ${dealerTotal - userTotal}`)
+        }
     }
 };
 
+function returnToForm(){
+    document.getElementById('gameArea').style.display = 'none';
+    document.getElementById('userForm').style.display = 'block';
+    shuffledDeck = [];
+    hand = [];
+    dealerCards = [];
+    document.getElementById('dealerCards').innerHTML = "";
+    document.getElementById('playerCards').innerHTML = "";
+};
 
 // Start game
 async function startGame() {
@@ -109,16 +195,10 @@ async function startGame() {
         document.getElementById('welcomeMessage').textContent = `Welcome ${validUsername}!`;
 
         createDeck();
-        shuffleDeck();       // shuffle
-        dealInitialCards();  // deal initial cards
     } catch (error) {
         alert(error);
     }
 }
-
-
-
-
 
 </script>
 </head>
@@ -147,7 +227,7 @@ async function startGame() {
     <div id="buttons">
         <button id="hitButton" onclick="hit()">Hit</button>
         <button id="standButton" onclick="stand()">Stand</button>
-        <button id="shuffleButton" onclick="shuffleDeck()">Shuffle Deck</button>
+        <button id="shuffleButton" onclick="shuffleDeck()">Shuffle (currently not functional)</button>
     </div>
 
     <h3 id="resultMessage"></h3>
